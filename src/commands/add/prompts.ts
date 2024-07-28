@@ -57,7 +57,13 @@ export const askDbType = async (options: InitOptions) => {
     })) as DBType)
   );
 };
-
+/**
+ * Prompts the user to select a database provider based on the given options, database type, and package manager.
+ *
+ * @param {InitOptions} options - The options for the initialization.
+ * @param {DBType} dbType - The type of the database.
+ * @param {PMType} ppm - The package manager being used.
+ */
 export const askDbProvider = async (
   options: InitOptions,
   dbType: DBType,
@@ -75,7 +81,12 @@ export const askDbProvider = async (
     })) as DBProvider)
   );
 };
-
+/**
+ * Asynchronously asks the user if they are using PlanetScale as their database provider.
+ *
+ * @param {InitOptions} options - An object containing the initialization options.
+ * @return {Promise<boolean>} A promise that resolves to a boolean indicating whether the user is using PlanetScale.
+ */
 export const askPscale = async (options: InitOptions) => {
   return (
     options.dbProvider ??
@@ -96,7 +107,12 @@ export const askExampleModel = async (options: InitOptions) => {
     }))
   );
 };
-
+/**
+ * Asks the user to select an authentication package to use.
+ *
+ * @param {InitOptions} options - The initialization options.
+ * @return {Promise<AuthType | null>} The selected authentication package or null if none was selected.
+ */
 export const askAuth = async (options: InitOptions) => {
   return (
     options.auth ??
@@ -115,7 +131,13 @@ export const askAuthProvider = async () => {
     }),
   })) as AuthProvider[];
 };
-
+/**
+ * Asks the user to select any miscellaneous packages to add based on existing packages and ORM/Auth presence.
+ *
+ * @param {AvailablePackage[]} existingPackages - The array of existing packages.
+ * @param {boolean} hasOrmAndAuth - Indicates whether ORM and Auth are present.
+ * @return {Promise<PackageChoice[] | []>} The selected miscellaneous packages or an empty array.
+ */
 export const askMiscPackages = async (
   existingPackages: AvailablePackage[],
   hasOrmAndAuth: boolean

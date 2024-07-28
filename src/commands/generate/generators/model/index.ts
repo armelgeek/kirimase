@@ -12,7 +12,6 @@ import {
   generateServiceFileNames,
   getFilePaths,
 } from "../../../filePaths/index.js";
-import { existsSync, readFileSync } from "fs";
 import { updateRootSchema } from "./utils.js";
 
 export async function scaffoldModel(
@@ -23,7 +22,7 @@ export async function scaffoldModel(
   const { tableName } = schema;
   const { orm, preferredPackageManager, driver, t3 } = readConfigFile();
   const { shared, drizzle } = getFilePaths();
-  const serviceFileNames = generateServiceFileNames(toCamelCase(tableName));
+  const { mutationsPath, queriesPath }:any = generateServiceFileNames(toCamelCase(tableName));
 
   const modelPath = `${formatFilePath(shared.orm.schemaDir, {
     prefix: "rootPath",
@@ -41,11 +40,12 @@ export async function scaffoldModel(
   }
 
   // create queryFile
-  createFile(serviceFileNames.queriesPath, generateQueryContent(schema, orm));
+  // @ts-ignore
+  createFile(queriesPath, generateQueryContent(schema, orm));
 
   // create mutationFile
   createFile(
-    serviceFileNames.mutationsPath,
+    mutationsPath,
     generateMutationContent(schema, driver, orm)
   );
 

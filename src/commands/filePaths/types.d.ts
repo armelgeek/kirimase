@@ -34,6 +34,9 @@ export type Paths = {
       layoutPage: string;
       authSchema?: string;
     };
+    misc: {
+      element: string;
+    }
   };
   "next-auth": {
     nextAuthApiRoute: string;

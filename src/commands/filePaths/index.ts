@@ -36,6 +36,9 @@ export const paths: { t3: Paths; normal: Paths } = {
         indexRoute: "app/page.tsx",
         dashboardRoute: "app/(app)/dashboard/page.tsx",
       },
+      misc: {
+        element: 'components/element'
+      }
     },
     prisma: { dbIndex: "lib/db/index.ts" },
     trpc: {
@@ -130,6 +133,9 @@ export const paths: { t3: Paths; normal: Paths } = {
         indexRoute: "app/page.tsx",
         dashboardRoute: "app/(app)/dashboard/page.tsx",
       },
+      misc: {
+        element: 'components/element'
+      }
     },
     prisma: { dbIndex: "server/db.ts" },
     trpc: {
@@ -190,12 +196,22 @@ export const paths: { t3: Paths; normal: Paths } = {
     },
   },
 };
+/**
+ * Retrieves the appropriate file paths based on the configuration.
+ *
+ * @return {Paths} The file paths object containing either the t3 or normal paths.
+ */
 export const getFilePaths = () => {
   const { t3 } = readConfigFile();
   if (t3) return paths.t3;
   else return paths.normal;
 };
-
+/**
+ * Check if the filePath has an extension by looking for the last dot
+ *
+ * @param {string} filePath - The file path to check for extension
+ * @return {string} The file path without the extension
+ */
 export function removeFileExtension(filePath: string): string {
   // Check if the filePath has an extension by looking for the last dot
   const lastDotIndex = filePath.lastIndexOf(".");
@@ -209,22 +225,34 @@ export function removeFileExtension(filePath: string): string {
   // Return the original filePath if no extension was found
   return filePath;
 }
-
+/**
+ * Formats the file path based on the given options.
+ *
+ * @param {string} filePath - The file path to format
+ * @param {{ prefix: "alias" | "rootPath"; removeExtension: boolean; }} opts - The options object containing prefix and removeExtension
+ * @return {string} The formatted file path
+ */
 export const formatFilePath = (
   filePath: string,
   opts: {
     prefix: "alias" | "rootPath";
     removeExtension: boolean;
   }
-) => {
+): string => {
   const { alias, rootPath } = readConfigFile();
   const formattedFP = opts.removeExtension
     ? removeFileExtension(filePath)
     : filePath;
   return `${opts.prefix === "alias" ? `${alias}/` : rootPath}${formattedFP}`;
 };
+/**
+ * Generates the file paths for the service files of a new model.
+ *
+ * @param {string} newModel - The name of the new model.
+ * @return {Object} An object containing the file paths for queries and mutations.
+ */
 
-export const generateServiceFileNames = (newModel: string) => {
+export const generateServiceFileNames = (newModel: string): object => {
   const { shared } = getFilePaths();
   const { rootPath } = readConfigFile();
   const rootDir = rootPath.concat(shared.orm.servicesDir);
@@ -233,7 +261,12 @@ export const generateServiceFileNames = (newModel: string) => {
     mutationsPath: `${rootDir}/${newModel}/mutations.ts`,
   };
 };
-
+/**
+ * Returns the index file path for the database based on the ORM to be installed.
+ *
+ * @param {ORMType} ormToBeInstalled - The ORM type to be installed. If not provided, it will use the ORM type from the config file.
+ * @return {string | null} The index file path for the database, or null if no ORM is specified or it is set to "null".
+ */
 export const getDbIndexPath = (ormToBeInstalled?: ORMType) => {
   const { drizzle, prisma } = getFilePaths();
   const { orm: ormFromConfig } = readConfigFile();
